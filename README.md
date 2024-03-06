@@ -1,1 +1,36 @@
 # Code_Alpha_Cyber_Security_Project
+
+# For Network Sniffer 
+
+
+
+
+
+from scapy.all import *
+
+def packet_callback(packet):
+    if ARP in packet:
+        src_mac = packet[ARP].hwsrc
+        src_ip = packet[ARP].psrc
+        dst_mac = packet[ARP].hwdst
+        dst_ip = packet[ARP].pdst
+        print(f"ARP Packet: {src_mac} ({src_ip}) -> {dst_mac} ({dst_ip})")
+
+    elif IP in packet:
+        src_ip = packet[IP].src
+        dst_ip = packet[IP].dst
+        protocol = packet[IP].proto
+        print(f"IP Packet: {src_ip} -> {dst_ip} Protocol: {protocol}")
+
+        if TCP in packet:
+            src_port = packet[TCP].sport
+            dst_port = packet[TCP].dport
+            print(f"TCP Segment: {src_ip}:{src_port} -> {dst_ip}:{dst_port}")
+
+        elif UDP in packet:
+            src_port = packet[UDP].sport
+            dst_port = packet[UDP].dport
+            print(f"UDP Datagram: {src_ip}:{src_port} -> {dst_ip}:{dst_port}")
+
+# Sniff network packets
+sniff(prn=packet_callback, store=0)
